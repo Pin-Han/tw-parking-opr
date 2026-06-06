@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
-import httpx
-
-API_BASE = "http://localhost:8000"
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from dashboard.data_access import get_anomalies as _get_anomalies
 
 st.set_page_config(page_title="異常偵測", layout="wide")
 st.title("異常偵測")
@@ -13,19 +14,7 @@ sigma = st.slider("異常門檻 (σ)", min_value=1.0, max_value=4.0, value=2.0, 
 
 @st.cache_data(ttl=300)
 def fetch_anomalies(sigma_val):
-    try:
-        res = httpx.get(
-            f"{API_BASE}/api/opr/anomalies",
-            params={"days": 14, "sigma": sigma_val},
-            timeout=15,
-        )
-        res.raise_for_status()
-        data = res.json()
-        if data.get("message"):
-            return pd.DataFrame(), data["message"]
-        return pd.DataFrame(data["data"]), None
-    except Exception as e:
-        return pd.DataFrame(), str(e)
+    return _get_anomalies(days=14, sigma=sigma_val)
 
 
 anomalies, msg = fetch_anomalies(sigma)

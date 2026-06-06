@@ -1,9 +1,10 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-import httpx
-
-API_BASE = "http://localhost:8000"
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from dashboard.data_access import get_opr_data
 
 st.set_page_config(page_title="OPR 分析", layout="wide")
 st.title("OPR 統計分析")
@@ -13,15 +14,7 @@ days = st.slider("分析天數", min_value=3, max_value=90, value=14)
 
 @st.cache_data(ttl=300)
 def fetch_opr(endpoint, params=None):
-    try:
-        res = httpx.get(f"{API_BASE}/api/opr/{endpoint}", params=params, timeout=15)
-        res.raise_for_status()
-        data = res.json()
-        if data.get("message"):
-            return pd.DataFrame(), data["message"]
-        return pd.DataFrame(data["data"]), None
-    except Exception as e:
-        return pd.DataFrame(), str(e)
+    return get_opr_data(endpoint, params)
 
 
 tab1, tab2, tab3 = st.tabs(["每日彙總", "時段模式", "週環比"])

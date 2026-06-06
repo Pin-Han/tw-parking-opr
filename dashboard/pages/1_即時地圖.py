@@ -1,9 +1,10 @@
 import streamlit as st
 import pydeck as pdk
 import pandas as pd
-import httpx
-
-API_BASE = "http://localhost:8000"
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from dashboard.data_access import get_realtime_df
 
 st.set_page_config(page_title="即時停車地圖", layout="wide")
 st.title("即時停車使用率")
@@ -11,13 +12,7 @@ st.title("即時停車使用率")
 
 @st.cache_data(ttl=120)
 def load_realtime():
-    try:
-        res = httpx.get(f"{API_BASE}/api/realtime", timeout=15)
-        res.raise_for_status()
-        return pd.DataFrame(res.json()["records"])
-    except Exception as e:
-        st.error(f"無法連線 API: {e}")
-        return pd.DataFrame()
+    return get_realtime_df()
 
 
 df = load_realtime()
