@@ -8,6 +8,7 @@ from dashboard.data_access import get_realtime_df
 
 st.set_page_config(page_title="Live Parking Map", layout="wide")
 st.title("Live Parking Occupancy")
+st.caption("Real-time street parking data from Taipei and New Taipei City government open-data APIs, refreshed every 2 minutes.")
 
 
 @st.cache_data(ttl=120)

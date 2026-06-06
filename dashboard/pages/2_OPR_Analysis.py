@@ -8,6 +8,7 @@ from dashboard.data_access import get_opr_data
 
 st.set_page_config(page_title="OPR Analysis", layout="wide")
 st.title("OPR Analysis")
+st.caption("Operational performance insights derived from accumulated parking snapshots taken every 30 minutes.")
 
 days = st.slider("Analysis Period (days)", min_value=3, max_value=90, value=14)
 

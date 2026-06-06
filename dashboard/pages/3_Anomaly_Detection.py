@@ -7,7 +7,25 @@ from dashboard.data_access import get_anomalies as _get_anomalies
 
 st.set_page_config(page_title="Anomaly Detection", layout="wide")
 st.title("Anomaly Detection")
-st.caption("Detects road segments where today's occupancy deviates more than 2σ from historical average")
+
+with st.expander("How does this work?", expanded=False):
+    st.markdown("""
+This page compares **today's parking occupancy** for each district and hour
+against the **historical average** for the same district and hour over the past 14 days.
+
+If today's value deviates more than a set number of standard deviations (σ) from
+the historical mean, it is flagged as an anomaly.
+
+**Example:** 大安區 typically has 82% occupancy at 2 PM (std dev 3%).
+If today it suddenly jumps to 95%, that's `(95% - 82%) / 3% = +4.3σ` — far beyond
+the 2σ threshold, so it gets flagged.
+
+**What anomalies can mean:**
+- **Unusually high** — nearby event, construction rerouting traffic, data spike
+- **Unusually low** — road closure, parking meter maintenance, data outage
+
+Adjust the σ threshold below: higher = only flag extreme deviations, lower = more sensitive.
+""")
 
 sigma = st.slider("Anomaly Threshold (σ)", min_value=1.0, max_value=4.0, value=2.0, step=0.5)
 
