@@ -1,20 +1,20 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="停車 OPR 分析平台",
+    page_title="Parking OPR Analytics",
     page_icon="🅿️",
     layout="wide",
 )
 
-st.title("停車 OPR 分析平台")
-st.markdown("台北市 + 新北市路邊停車即時數據與營運績效分析")
+st.title("Parking OPR Analytics")
+st.markdown("Real-time street parking usage & operational performance reports for Taipei + New Taipei City")
 
 st.markdown("""
-### 功能頁面
+### Pages
 
-- **即時地圖** — 新北市停車使用率地圖 + 全區統計
-- **OPR 分析** — 每日彙總、時段模式、週環比
-- **異常偵測** — 今日使用率異常路段警示
+- **Live Map** — Real-time parking occupancy map for New Taipei City + district rankings
+- **OPR Analysis** — Daily summary, hourly patterns, week-over-week comparison
+- **Anomaly Detection** — Alerts for districts deviating from historical usage patterns
 
-👈 從左側選單選擇頁面
+👈 Select a page from the sidebar
 """)
