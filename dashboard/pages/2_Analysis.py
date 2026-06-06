@@ -41,13 +41,19 @@ with tab1:
 
         st.divider()
 
-        # District filter — default top 5
-        default_top5 = list(district_avg.head(5).index)
+        # District filter — default to 板橋區, 樹林區, 三重區; persist user selection
+        all_options = list(district_avg.index)
+        default_districts = [d for d in ["板橋區", "樹林區", "三重區"] if d in all_options]
+        if "selected_districts" not in st.session_state:
+            st.session_state.selected_districts = default_districts
+
         selected = st.multiselect(
             "Select districts to display",
-            options=list(district_avg.index),
-            default=default_top5,
+            options=all_options,
+            default=st.session_state.selected_districts,
+            key="district_picker",
         )
+        st.session_state.selected_districts = selected
 
         if selected:
             filtered = df[df["district"].isin(selected)]
