@@ -13,7 +13,7 @@ def get_snapshot_df(days: int = 14) -> pd.DataFrame:
     )
     if len(df) == 0:
         return df
-    df["snapshot_time"] = pd.to_datetime(df["snapshot_time"], format="mixed")
+    df["snapshot_time"] = pd.to_datetime(df["snapshot_time"], format="ISO8601")
     df["date"] = df["snapshot_time"].dt.date.astype(str)
     return df
 
