@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from api.database import init_db
-from api.routes import realtime, snapshot
+from api.routes import realtime, snapshot, opr
 from data.snapshot import save_snapshot
 
 load_dotenv()
@@ -34,6 +34,7 @@ app.add_middleware(
 
 app.include_router(realtime.router)
 app.include_router(snapshot.router)
+app.include_router(opr.router)
 
 
 @app.get("/")
