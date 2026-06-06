@@ -110,7 +110,8 @@ with col_map:
         # Add user location marker
         if user_lat and user_lng:
             user_point = pd.DataFrame([{
-                "latitude": user_lat, "longitude": user_lng, "label": "You",
+                "latitude": user_lat, "longitude": user_lng,
+                "road_name": "Your Location", "occupancy_pct": "",
             }])
             layers.append(pdk.Layer(
                 "ScatterplotLayer",
@@ -118,7 +119,7 @@ with col_map:
                 get_position=["longitude", "latitude"],
                 get_color=[0, 120, 255, 220],
                 get_radius=120,
-                pickable=True,
+                pickable=False,
             ))
 
         view = pdk.ViewState(latitude=map_lat, longitude=map_lng, zoom=map_zoom, pitch=0)
