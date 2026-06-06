@@ -13,7 +13,7 @@ st.markdown("""
 ### Pages
 
 - **Live Map** — Real-time parking occupancy map for New Taipei City + district rankings
-- **OPR Analysis** — Daily summary, hourly patterns, week-over-week comparison
+- **Analysis** — Daily summary, hourly patterns, week-over-week comparison
 - **Anomaly Detection** — Alerts for districts deviating from historical usage patterns
 
 👈 Select a page from the sidebar
