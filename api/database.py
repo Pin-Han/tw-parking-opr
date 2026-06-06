@@ -6,7 +6,12 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///parking.db")
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+# Neon PostgreSQL uses sslmode=require; SQLAlchemy needs connect_args for SSL
+connect_args = {}
+if DATABASE_URL.startswith("postgresql"):
+    connect_args = {"sslmode": "require"}
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args=connect_args)
 
 
 def init_db():

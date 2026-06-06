@@ -2,7 +2,23 @@ import os
 import pandas as pd
 import httpx
 
-API_BASE = os.getenv("API_BASE", "")
+# Support both os.environ (Render) and Streamlit secrets (Streamlit Cloud)
+def _get_secret(key: str, default: str = "") -> str:
+    val = os.getenv(key, "")
+    if val:
+        return val
+    try:
+        import streamlit as st
+        return st.secrets.get(key, default)
+    except Exception:
+        return default
+
+# Inject DATABASE_URL from Streamlit secrets into env for analysis/opr.py
+db_url = _get_secret("DATABASE_URL")
+if db_url and not os.getenv("DATABASE_URL"):
+    os.environ["DATABASE_URL"] = db_url
+
+API_BASE = _get_secret("API_BASE")
 
 
 def get_realtime_df() -> pd.DataFrame:
@@ -34,7 +50,7 @@ def get_opr_data(endpoint: str, params: dict = None) -> tuple[pd.DataFrame, str 
     days = (params or {}).get("days", 14)
     df = get_snapshot_df(days=days)
     if df.empty:
-        return pd.DataFrame(), "尚無快照資料"
+        return pd.DataFrame(), "No snapshot data yet"
     if endpoint == "daily":
         return daily_opr_summary(df), None
     elif endpoint == "hourly":
@@ -63,6 +79,6 @@ def get_anomalies(days: int = 14, sigma: float = 2.0) -> tuple[pd.DataFrame, str
     from analysis.anomaly import anomaly_detect
     df = get_snapshot_df(days=days)
     if df.empty:
-        return pd.DataFrame(), "尚無快照資料"
+        return pd.DataFrame(), "No snapshot data yet"
     result = anomaly_detect(df, sigma=sigma)
     return result, None
