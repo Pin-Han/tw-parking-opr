@@ -6,7 +6,7 @@
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/api/main" }
+    { "src": "/(.*)", "dest": "api/main.py" }
   ],
   "crons": [
     {
