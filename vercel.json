@@ -5,8 +5,8 @@
       "use": "@vercel/python"
     }
   ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/main" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/main" }
   ],
   "crons": [
     {
