@@ -1,0 +1,17 @@
+{
+  "builds": [
+    {
+      "src": "api/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/main" }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/snapshot",
+      "schedule": "*/30 * * * *"
+    }
+  ]
+}

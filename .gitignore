@@ -12,3 +12,5 @@ build/
 .pytest_cache/
 idea.md
 mockup.html
+.vercel
+.env*

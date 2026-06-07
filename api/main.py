@@ -1,8 +1,6 @@
 import os
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from api.database import init_db
 from api.routes import realtime, snapshot, opr
@@ -10,20 +8,10 @@ from data.snapshot import save_snapshot
 
 load_dotenv()
 
+# Init DB on cold start
+init_db()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    init_db()
-    interval = int(os.getenv("SNAPSHOT_INTERVAL_MINUTES", "30"))
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(save_snapshot, "interval", minutes=interval, id="snapshot")
-    scheduler.start()
-    print(f"[scheduler] Snapshot every {interval} min")
-    yield
-    scheduler.shutdown()
-
-
-app = FastAPI(title="Parking OPR API", lifespan=lifespan)
+app = FastAPI(title="Parking OPR API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,3 +28,14 @@ app.include_router(opr.router)
 @app.get("/")
 def root():
     return {"message": "Parking OPR API", "docs": "/docs"}
+
+
+@app.get("/api/cron/snapshot")
+def cron_snapshot(request: Request):
+    """Triggered by Vercel Cron every 30 min to collect parking data."""
+    auth = request.headers.get("authorization")
+    cron_secret = os.getenv("CRON_SECRET", "")
+    if cron_secret and auth != f"Bearer {cron_secret}":
+        return {"error": "Unauthorized"}, 401
+    save_snapshot()
+    return {"status": "ok"}
