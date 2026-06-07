@@ -30,6 +30,11 @@ def root():
     return {"message": "Parking OPR API", "docs": "/docs"}
 
 
+# Vercel serverless handler
+from mangum import Mangum
+handler = Mangum(app)
+
+
 @app.get("/api/cron/snapshot")
 def cron_snapshot(request: Request):
     """Triggered by Vercel Cron every 30 min to collect parking data."""
