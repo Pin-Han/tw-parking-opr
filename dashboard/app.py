@@ -1,12 +1,12 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Parking OPR Analytics",
+    page_title="Parking Analytics",
     page_icon="🅿️",
     layout="wide",
 )
 
-st.title("Parking OPR Analytics")
+st.title("Parking Analytics")
 st.markdown("Real-time street parking usage & operational performance reports for Taipei + New Taipei City")
 
 st.markdown("""
