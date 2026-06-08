@@ -24,7 +24,7 @@ API_BASE = _get_secret("API_BASE")
 def get_realtime_df() -> pd.DataFrame:
     if API_BASE:
         try:
-            res = httpx.get(f"{API_BASE}/api/realtime", timeout=15)
+            res = httpx.get(f"{API_BASE}/api/realtime", timeout=60)
             res.raise_for_status()
             return pd.DataFrame(res.json()["records"])
         except Exception:
@@ -38,7 +38,7 @@ def get_realtime_df() -> pd.DataFrame:
 def get_opr_data(endpoint: str, params: dict = None) -> tuple[pd.DataFrame, str | None]:
     if API_BASE:
         try:
-            res = httpx.get(f"{API_BASE}/api/opr/{endpoint}", params=params, timeout=15)
+            res = httpx.get(f"{API_BASE}/api/opr/{endpoint}", params=params, timeout=60)
             res.raise_for_status()
             data = res.json()
             if data.get("message"):
@@ -66,7 +66,7 @@ def get_anomalies(days: int = 14, sigma: float = 2.0) -> tuple[pd.DataFrame, str
             res = httpx.get(
                 f"{API_BASE}/api/opr/anomalies",
                 params={"days": days, "sigma": sigma},
-                timeout=15,
+                timeout=60,
             )
             res.raise_for_status()
             data = res.json()

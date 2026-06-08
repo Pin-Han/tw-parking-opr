@@ -6,9 +6,12 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///parking.db")
 
-# Use psycopg v3 driver for PostgreSQL; handle Neon SSL
+# Use psycopg v3 driver for PostgreSQL; clean up Neon-specific params
 if DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+    # Remove channel_binding param that psycopg doesn't support as URL param
+    import re
+    DATABASE_URL = re.sub(r"[&?]channel_binding=[^&]*", "", DATABASE_URL)
 
 connect_args = {}
 if "psycopg" in DATABASE_URL:

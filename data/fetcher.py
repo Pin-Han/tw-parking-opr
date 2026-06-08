@@ -46,7 +46,7 @@ def parse_taipei_xml(xml_content: str) -> list[dict]:
 
 def fetch_taipei() -> list[dict]:
     try:
-        res = httpx.get(TAIPEI_URL, timeout=15)
+        res = httpx.get(TAIPEI_URL, timeout=30)
         res.raise_for_status()
         return parse_taipei_xml(res.text)
     except Exception as e:
@@ -88,7 +88,7 @@ def parse_ntpc_csv(csv_content: str) -> list[dict]:
 
 def fetch_ntpc() -> list[dict]:
     try:
-        res = httpx.get(NTPC_URL, timeout=15)
+        res = httpx.get(NTPC_URL, timeout=30)
         res.raise_for_status()
         return parse_ntpc_csv(res.text)
     except Exception as e:
