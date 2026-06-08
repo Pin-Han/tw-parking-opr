@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import text
 from datetime import datetime, timedelta
 from api.database import get_engine
 
@@ -6,11 +7,12 @@ from api.database import get_engine
 def get_snapshot_df(days: int = 14) -> pd.DataFrame:
     engine = get_engine()
     since = (datetime.now() - timedelta(days=days)).isoformat()
-    df = pd.read_sql(
-        "SELECT * FROM snapshots WHERE snapshot_time > :since ORDER BY snapshot_time",
-        engine,
-        params={"since": since},
-    )
+    with engine.connect() as conn:
+        df = pd.read_sql(
+            text("SELECT * FROM snapshots WHERE snapshot_time > :since ORDER BY snapshot_time"),
+            conn,
+            params={"since": since},
+        )
     if len(df) == 0:
         return df
     df["snapshot_time"] = pd.to_datetime(df["snapshot_time"], format="ISO8601")
